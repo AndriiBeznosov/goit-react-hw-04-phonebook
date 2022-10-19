@@ -13,14 +13,3 @@ export const Container = styled.div`
   padding: 10px;
   border-radius: 10px;
 `;
-export const Title = styled.h1`
-  color: ${p => p.theme.colors.white};
-  text-align: center;
-  margin-top: 0;
-`;
-
-export const TitleTwo = styled.h2`
-  color: ${p => p.theme.colors.colorText};
-  margin-bottom: 0;
-  margin-top: 0;
-`;
