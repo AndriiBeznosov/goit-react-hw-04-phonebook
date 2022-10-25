@@ -6,16 +6,33 @@ import { ContactList } from './ContactList/ContactList';
 import { Wrapper, Container } from './App.styled';
 import { Caption } from './Title/Title';
 
+const LS_KEY_CONTACTS = 'contacts_items';
+
 export class App extends Component {
   state = {
     contacts: [
-      { id: 'id-1', name: 'Rosie Simpson', number: '459-12-56' },
-      { id: 'id-2', name: 'Hermione Kline', number: '443-89-12' },
-      { id: 'id-3', name: 'Eden Clements', number: '645-17-79' },
-      { id: 'id-4', name: 'Annie Copeland', number: '227-91-26' },
+      { id: 'id-1', name: 'Rosie Simpson', number: '+38 (096)-459-12-56' },
+      { id: 'id-2', name: 'Hermione Kline', number: '+38 (096)-443-89-12' },
+      { id: 'id-3', name: 'Eden Clements', number: '+38 (096)-645-17-79' },
+      { id: 'id-4', name: 'Annie Copeland', number: '+38 (096)-227-91-26' },
     ],
     filter: '',
   };
+  componentDidMount() {
+    const contactsList = JSON.parse(localStorage.getItem(LS_KEY_CONTACTS));
+    if (contactsList !== null) {
+      this.setState({ contacts: contactsList });
+    }
+  }
+
+  componentDidUpdate(_, prevState) {
+    if (prevState.contacts !== this.state.contacts) {
+      localStorage.setItem(
+        LS_KEY_CONTACTS,
+        JSON.stringify(this.state.contacts)
+      );
+    }
+  }
 
   addTodo = user => {
     if (!user) {
@@ -54,6 +71,7 @@ export class App extends Component {
   render() {
     const { filter } = this.state;
     const visibleContacts = this.getVisibleContacts();
+
     return (
       <Wrapper>
         <Caption title="Phonebook" />

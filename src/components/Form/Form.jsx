@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
-import { Form, Label, Span, Input, Button } from './Form.styled';
+import { Form, Label, Input, Span, Button } from './Form.styled';
+import { InputElement } from '../Input/Input';
+import { PatternFormat } from 'react-number-format';
 
 export class ContactForm extends Component {
   state = {
@@ -25,7 +27,7 @@ export class ContactForm extends Component {
       <Form onSubmit={this.hendleSubmit}>
         <Label>
           <Span>Name</Span>
-          <Input
+          <InputElement
             value={this.state.name}
             onChange={this.hendleChangeName}
             type="text"
@@ -38,7 +40,11 @@ export class ContactForm extends Component {
 
         <Label>
           <Span>Number</Span>
-          <Input
+          <PatternFormat
+            customInput={Input}
+            format="+38 (###)-###-##-##"
+            allowEmptyFormatting
+            mask="_"
             value={this.state.number}
             onChange={this.hendleChangeNumber}
             type="tel"
