@@ -1,26 +1,26 @@
 import React, { useEffect, useState } from 'react';
+import { toast } from 'react-toastify';
 import { nanoid } from 'nanoid';
+
+import { Wrapper, Container } from './App.styled';
 import { ContactForm } from './Form/Form';
 import { Filter } from './Filter/Filter';
 import { ContactList } from './ContactList/ContactList';
-import { Wrapper, Container } from './App.styled';
 import { Caption } from './Title/Title';
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
-
-const LS_KEY_CONTACTS = 'contacts_items';
-const contactsDefault = [
-  { id: 'id-1', name: 'Rosie Simpson', number: '+38 (096)-459-12-56' },
-  { id: 'id-2', name: 'Hermione Kline', number: '+38 (096)-443-89-12' },
-  { id: 'id-3', name: 'Eden Clements', number: '+38 (096)-645-17-79' },
-  { id: 'id-4', name: 'Annie Copeland', number: '+38 (096)-227-91-26' },
-];
-const contactsList = JSON.parse(localStorage.getItem(LS_KEY_CONTACTS));
+import { ContainerToast } from './ToastContainer/ToastContainer';
+import {
+  GetItemLocalStorage,
+  SetItemLocalStorage,
+} from '../utils/LocalStorage';
+import contactsDefault from '../contants/contactsDefault.json';
+import { LS_KEY_CONTACTS } from 'contants/ConstansKey';
 
 export const App = () => {
+  const contactsList = GetItemLocalStorage(LS_KEY_CONTACTS);
+
   const [contacts, setContacts] = useState(contactsList ?? contactsDefault);
   const [filter, setFilter] = useState('');
-  //!додавання контакту з перевіркою на унікальність телефону
+
   const addTodo = user => {
     if (!user) {
       return;
@@ -34,19 +34,28 @@ export const App = () => {
     user.id = nanoid();
 
     setContacts([user, ...contacts]);
-    toast.success('✅ Contact addano.');
+    toast.success(' Contact addano. ✅');
   };
-  // отримання результату з input для фільтрації
+
   const contactSearch = e => {
     setFilter(e.target.value);
   };
-  // видалення контакту по id
-  const deletContact = idContact => {
-    setContacts(contacts.filter(contact => contact.id !== idContact));
+
+  const deleteFilterContact = idContact => {
+    return contacts.filter(contact => {
+      if (contact.id === idContact) {
+        toast.info(' Contact deleted. ✅ ');
+      }
+      return contact.id !== idContact;
+    });
   };
-  // додавання в localStorage при зміні contacts
+
+  const deletContact = idContact => {
+    setContacts(deleteFilterContact(idContact));
+  };
+
   useEffect(() => {
-    localStorage.setItem(LS_KEY_CONTACTS, JSON.stringify(contacts));
+    SetItemLocalStorage(LS_KEY_CONTACTS, contacts);
   }, [contacts]);
 
   const normalizedFilter = filter.toLowerCase();
@@ -67,20 +76,7 @@ export const App = () => {
           deletContact={deletContact}
         />
       </Container>
-      <ToastContainer
-        position="top-right"
-        autoClose={2000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="light"
-      />
-      {/* Same as */}
-      <ToastContainer />
+      <ContainerToast />
     </Wrapper>
   );
 };

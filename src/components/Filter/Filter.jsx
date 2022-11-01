@@ -1,4 +1,5 @@
 import PropTypes from 'prop-types';
+
 import { Div, Input, Span } from './Filter.styled';
 
 export const Filter = ({ onValue, onFilter }) => {
